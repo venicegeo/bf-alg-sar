@@ -1,1 +1,4 @@
+numpy
+scipy
+skimage
 beachfront>=0.1.0

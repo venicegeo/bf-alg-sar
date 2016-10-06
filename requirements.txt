@@ -2,3 +2,7 @@ numpy
 scipy
 skimage
 beachfront>=0.1.0
+gippy
+potrace
+json
+fiona
