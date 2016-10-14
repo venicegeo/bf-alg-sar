@@ -11,13 +11,22 @@ try:
 except:
     from osgeo import gdal, osr
 
-def main(img_path, out_path, kernelSize=kernelSize, scaleFactor=sf):
+def main(img_path, out_path, kernelSize=10, scaleFactor=0.1):
     #run bf-Sar2Shoreline --> returns binary mask
-    binary_mask = bf_Sar2Shoreline.WaterExtractionSAR(img_path, kernelSize=kernelSize, scaleFactor=sf)
+    name = bf_Sar2Shoreline.xO_names(out_path)
+    binary_mask ='%s/%s_binary.%s' % (name['directory'],
+                                  name['basename'],
+                                  name['extension'])
+    print binary_mask
+    status = bf_Sar2Shoreline.WaterExtractionSAR(img_path,
+                                                 out_path=binary_mask,
+                                                 kernelSize=kernelSize,
+                                                 scaleFactor=sf)
     #run vectorizing code from bf-py --> returns vector
-    coastline = beachfront.vectorize.trace_it(binary)
+    coastline = trace_it(binary_mask)
+    os.remove(binary_mask)
     # write to file
-    with open('_', 'w') as out_path:
+    with open(out_path, 'w') as out_path:
         json.dump(coastline, out_path)
 
 def usage():

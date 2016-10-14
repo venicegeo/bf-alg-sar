@@ -21,6 +21,7 @@ def WaterExtractionSAR(img_path, out_path=None, kernelSize=10, scaleFactor=None)
     img = img > thresh
     img = img.astype('uint8')
     img = scipy.ndimage.filters.median_filter(img, size=(kernelSize))
+    print img_path
     if out_path is not None:
         saveArrayAsRaster(img_path, out_path, img)
         rs = gdal.Open(out_path, gdal.GA_Update)
