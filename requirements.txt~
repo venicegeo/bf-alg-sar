@@ -1,4 +1,9 @@
 numpy
 scipy
+wheel
+#beachfront>=0.1.0
+Cython==0.24.1
+pypotrace
+gippy>=1.0.0b3
 skimage
-beachfront>=0.1.0
+fiona

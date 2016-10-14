@@ -6,6 +6,7 @@ except:
     from osgeo import gdal, osr
 
 import bf_Sar2Shoreline
+import bf_algo_sar
 
 
 # have sample input sar image
