@@ -32,6 +32,15 @@ def test_rescale():
     os.remove('testdata/tile41_rs.tif')
     assert img1.mean() == img2.mean()
 
+
 def test_bf_algo_sar():
-    # once the bf-py stuff is working can test
-    assert 'placeholder' == 'placeholder'
+    """test geojson string generation"""
+    bf_algo_sar.main('testdata/tile41.tif',
+                     'testdata/tile41_results.geojson',
+                     kernelSize=10,
+                     scaleFactor=0.10)
+    f1 = open('testdata/tile41_results.geojson')
+    results = f1.readlines()
+    f2 = open('testdata/groundtruth.geojson')
+    gtruth = f2.readlines()
+    assert results == gtruth
