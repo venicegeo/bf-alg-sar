@@ -4,6 +4,7 @@ wheel
 #beachfront>=0.1.0
 Cython==0.24.1
 gippy>=1.0.0b3
+pyproj
 pypotrace
 skimage
 fiona

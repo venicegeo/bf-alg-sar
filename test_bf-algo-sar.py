@@ -24,12 +24,15 @@ def test_bf_Sar2Shoreline():
 
 def test_rescale():
     """test image rescaling"""
-    bf_Sar2Shoreline.rescaleImage('testdata/tile41.tif',out_path='testdata/tile41_rs.tif',scaleFactor=0.10, epsg=4326)
+    bf_Sar2Shoreline.rescaleImage('testdata/tile41.tif',out_path='testdata/tile41_rs.tif',scaleFactor=0.10, epsg=3857)
     rs = gdal.Open('testdata/tile41_rs.tif')
     img1 = rs.ReadAsArray()
     rs2 = gdal.Open('testdata/resample_groundtruth.tif')
     img2 = rs2.ReadAsArray()
+    rs = None
     os.remove('testdata/tile41_rs.tif')
+    print img1.mean()
+    print img2.mean()
     assert img1.mean() == img2.mean()
 
 

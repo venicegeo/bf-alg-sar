@@ -3,7 +3,8 @@ import sys
 import numpy as np
 import json
 import bf_Sar2Shoreline
-from bf.beachfront.vectorize import trace_it
+from gippy import GeoImage
+from bf.beachfront import vectorize
 
 try:
     import gdal
@@ -16,18 +17,18 @@ def main(img_path, out_path, kernelSize=10, scaleFactor=0.1, cleanup=1):
     name = bf_Sar2Shoreline.xO_names(out_path)
     binary_mask ='%s/%s_binary.tif' % (name['directory'],
                                   name['basename'])
-    print binary_mask
     status = bf_Sar2Shoreline.WaterExtractionSAR(img_path,
                                                  out_path=binary_mask,
                                                  kernelSize=kernelSize,
                                                  scaleFactor=scaleFactor)
+    geoimg = GeoImage(binary_mask)
+    geoimg.set_nodata(3)
     #run vectorizing code from bf-py --> returns vector
-    coastline = trace_it(binary_mask)
+    lines = vectorize.potrace(geoimg)
+    vectorize.save_geojson(lines, out_path, source='SAR imagery')
+    geoimg = None
     if cleanup == 1:
         os.remove(binary_mask)
-    # write to file
-    with open(out_path, 'w') as out_path:
-        json.dump(coastline, out_path)
 
 def usage():
     print("""

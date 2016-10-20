@@ -15,13 +15,17 @@ except:
 def WaterExtractionSAR(img_path, out_path=None, kernelSize=10, scaleFactor=None):
     if scaleFactor is not None:
         img_path = rescaleImage(img_path, out_path=None, scaleFactor=scaleFactor)
-    img = readImage(img_path)
+    #img = readImage(img_path)
+	rs = gdal.Open(img_path)
+	rb = rs.GetRasterBand(1)
+	img = rb.ReadAsArray()
+	rb = None
+	rs = None
     img = scipy.ndimage.filters.median_filter(img, size=(kernelSize))
     thresh = threshold_otsu(img)
     img = img > thresh
     img = img.astype('uint8')
     img = scipy.ndimage.filters.median_filter(img, size=(kernelSize))
-    print img_path
     if out_path is not None:
         saveArrayAsRaster(img_path, out_path, img)
         rs = gdal.Open(out_path, gdal.GA_Update)
@@ -42,12 +46,13 @@ def WaterExtractionSAR(img_path, out_path=None, kernelSize=10, scaleFactor=None)
         return img
 
 
-def rescaleImage(img_path,out_path=None,scaleFactor=0.10, epsg=4326):
+def rescaleImage(img_path,out_path=None,scaleFactor=0.10, epsg=3857):
     rs = gdal.Open(img_path)
     x0 = rs.RasterXSize
     y0 = rs.RasterYSize
     x1 = x0 * scaleFactor
     y1 = y0 * scaleFactor
+    rs = None
     if out_path is None:
         name = xO_names(img_path)
         out_path = '%s/%s_rs.%s' % (name['directory'], name['basename'], name['extension'])
