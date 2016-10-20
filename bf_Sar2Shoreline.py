@@ -16,16 +16,21 @@ def WaterExtractionSAR(img_path, out_path=None, kernelSize=10, scaleFactor=None)
     if scaleFactor is not None:
         img_path = rescaleImage(img_path, out_path=None, scaleFactor=scaleFactor)
     #img = readImage(img_path)
-	rs = gdal.Open(img_path)
-	rb = rs.GetRasterBand(1)
-	img = rb.ReadAsArray()
-	rb = None
-	rs = None
+    rs = gdal.Open(img_path)
+    rb = rs.GetRasterBand(1)
+    img = rb.ReadAsArray()
+    noDataValue = rb.GetNoDataValue()
+    if noDataValue is not None:
+        noData_mask = (img == noDataValue)
+    rb = None
+    rs = None
     img = scipy.ndimage.filters.median_filter(img, size=(kernelSize))
     thresh = threshold_otsu(img)
     img = img > thresh
     img = img.astype('uint8')
     img = scipy.ndimage.filters.median_filter(img, size=(kernelSize))
+    if noDataValue is not None:
+        img[noData_mask] = 3
     if out_path is not None:
         saveArrayAsRaster(img_path, out_path, img)
         rs = gdal.Open(out_path, gdal.GA_Update)
@@ -33,6 +38,7 @@ def WaterExtractionSAR(img_path, out_path=None, kernelSize=10, scaleFactor=None)
         colortable = gdal.ColorTable()
         colortable.SetColorEntry(0,(50, 200, 255))
         colortable.SetColorEntry(1,(187, 128, 25))
+        colortable.SetColorEntry(3,(0, 0, 0))
         rb.SetColorTable(colortable)
         rb.FlushCache()
         rs.FlushCache()
