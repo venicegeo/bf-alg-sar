@@ -24,7 +24,7 @@ def main(img_path, out_path, kernelSize=10, scaleFactor=0.1, cleanup=1):
     geoimg = GeoImage(binary_mask)
     geoimg.set_nodata(3)
     #run vectorizing code from bf-py --> returns vector
-    lines = vectorize.potrace(geoimg)
+    lines = vectorize.potrace(geoimg, turdsize=1.0, tolerance=0.1)
     vectorize.save_geojson(lines, out_path, source='SAR imagery')
     geoimg = None
     if cleanup == 1:
