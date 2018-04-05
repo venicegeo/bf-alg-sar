@@ -5,8 +5,9 @@ import scipy
 from scipy import ndimage
 try:
     from skimage.filter import threshold_otsu
-else:
+except:
     from skimage.filters import threshold_otsu
+
 try:
     import gdal
     import osr
