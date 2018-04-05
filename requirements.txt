@@ -6,5 +6,5 @@ Cython==0.24.1
 gippy>=1.0.0b3
 pyproj
 pypotrace
-skimage
+scikit-image
 fiona

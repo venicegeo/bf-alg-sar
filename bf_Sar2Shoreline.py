@@ -3,8 +3,10 @@ import sys
 import numpy as np
 import scipy
 from scipy import ndimage
-from skimage.filter import threshold_otsu
-
+try:
+    from skimage.filter import threshold_otsu
+else:
+    from skimage.filters import threshold_otsu
 try:
     import gdal
     import osr
